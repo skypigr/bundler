@@ -79,7 +79,10 @@ export class ExecutionManager {
   async attemptBundle (force = true): Promise<void> {
     debug('attemptBundle force=', force, 'count=', this.mempoolManager.count(), 'max=', this.maxMempoolSize)
     if (force || this.mempoolManager.count() >= this.maxMempoolSize) {
-      await this.bundleManager.sendNextBundle()
+      const ret = await this.bundleManager.sendNextBundle()
+      if (ret != null) {
+        await ret.wait()
+      }
     }
   }
 }

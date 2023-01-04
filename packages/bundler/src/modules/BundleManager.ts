@@ -1,7 +1,7 @@
 import { EntryPoint } from '@account-abstraction/contracts'
 import { MempoolManager } from './MempoolManager'
 import { ValidationManager, ValidationResult } from './ValidationManager'
-import { BigNumber, BigNumberish } from 'ethers'
+import { BigNumber, BigNumberish, ContractTransaction } from 'ethers'
 import { getAddr, UserOperation } from './moduleUtils'
 import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
 import Debug from 'debug'
@@ -34,8 +34,8 @@ export class BundleManager {
    * collect UserOps from mempool into a bundle
    * send this bundle.
    */
-  async sendNextBundle (): Promise<void> {
-    await this.mutex.runExclusive(async () => {
+  async sendNextBundle (): Promise<ContractTransaction | undefined> {
+    return await this.mutex.runExclusive(async () => {
       debug('sendNextBundle')
 
       const bundle = await this.createBundle()
@@ -43,8 +43,9 @@ export class BundleManager {
         debug('sendNextBundle - no bundle to send')
       } else {
         const beneficiary = await this._selectBeneficiary()
-        await this.sendBundle(bundle, beneficiary)
+        const ret = await this.sendBundle(bundle, beneficiary)
         debug(`sendNextBundle exit - after sent a bundle of ${bundle.length} `)
+        return ret
       }
     })
   }
@@ -53,11 +54,12 @@ export class BundleManager {
    * submit a bundle.
    * after submitting the bundle, remove all UserOps from the mempool
    */
-  async sendBundle (userOps: UserOperation[], beneficiary: string): Promise<void> {
+  async sendBundle (userOps: UserOperation[], beneficiary: string): Promise<ContractTransaction | undefined> {
     try {
-      await this.entryPoint.handleOps(userOps, beneficiary)
+      const ret = await this.entryPoint.handleOps(userOps, beneficiary)
       debug('sent handleOps with', userOps.length, 'ops. removing from mempool')
       this.mempoolManager.removeAllUserOps(userOps)
+      return ret
     } catch (e: any) {
       // failed to handleOp. use FailedOp to detect by
       if (e.errorName !== 'FailedOp') {
