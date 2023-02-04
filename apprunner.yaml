@@ -14,7 +14,7 @@ build:
       value: "example"
 run:
   runtime-version: 16.19.0
-  command: yarn run bundler --config packages/bundler/localconfig/local.bundler.config.json
+  command: yarn run bundler --config ./localconfig/local.bundler.config.json
   network:
     port: 8000
     env: APP_PORT
