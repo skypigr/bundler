@@ -30,7 +30,8 @@
     "hardhat-compile": "lerna run hardhat-compile",
     "preprocess": "yarn lerna-clear && yarn hardhat-compile && yarn lerna-tsc",
     "runop-self": "ts-node ./packages/bundler/src/runner/runop.ts --deployFactory --selfBundler",
-    "ci": "env ; yarn depcheck; yarn preprocess"
+    "ci": "env ; yarn depcheck; yarn preprocess",
+    "gen-config" : "cd packages/bundler/localconfig && bash gen_config_from_env.sh"
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.33.0",
