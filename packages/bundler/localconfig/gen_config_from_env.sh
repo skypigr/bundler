@@ -39,6 +39,7 @@ EOM
 
 if [ -f "$_CONFIG_FILE_NAME" ]; then
     echo bundler config file: "$_CONFIG_FILE_NAME"
+    cat < $_CONFIG_FILE_NAME
 else 
     echo "$_CONFIG_FILE_NAME does not exist."
 fi
