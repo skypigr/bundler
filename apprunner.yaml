@@ -16,7 +16,7 @@ run:
   runtime-version: 16.19.0
   command: yarn run gen-config && yarn run bundler --config ./localconfig/local.bundler.config.json
   network:
-    port: 8000
+    port: 3000
     env: APP_PORT
   env:
     - name: BUNDLER_ENV_NETWORK
@@ -27,3 +27,5 @@ run:
       value: "0x21f8c63F8aA848baBa3B5D4E19f879221E7a0275"
     - name: BUNDLER_ENV_MNEMONIC
       value: "test test test test test test test test test test test junk"
+    - name: BUNDLER_ENV_PORT
+      value: APP_PORT
