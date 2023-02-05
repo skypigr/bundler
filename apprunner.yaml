@@ -9,16 +9,15 @@ build:
     post-build:
       # - yarn run gen-config
   env:
-    - name: BUNDLER_ENV_NETWORK
-      value: "https://goerli.infura.io/v3/343f11a325594d318750bff27664473a"
-    - name: BUNDLER_ENV_ENTRYPOINT
-      value: "0x0f8425222890A6D2548e095102b4C0B9F4A08c82"
-    - name: BUNDLER_ENV_BENEFICIARY
-      value: "0x21f8c63F8aA848baBa3B5D4E19f879221E7a0275"
-    - name: BUNDLER_ENV_MNEMONIC
-      value: "test test test test test test test test test test test junk"
     - name: BUNDLER_ENV_PORT
       value: 3000
+  secrets:
+    - name: BUNDLER_ENV_MNEMONIC
+      value-from: "arn:aws:ssm:us-west-2:198308436524:parameter/dev_bundler_mnemonic"
+    - name: BUNDLER_ENV_NETWORK
+      value-from: "arn:aws:ssm:us-west-2:198308436524:parameter/dev_bundler_network_goerli"
+    - name: BUNDLER_ENV_BENEFICIARY
+      value-from: "arn:aws:ssm:us-west-2:198308436524:parameter/dev_bundler_beneficiary"
 run:
   runtime-version: 16.19.0
   command: yarn run bundler --config ./localconfig/local.bundler.config.json --unsafe
