@@ -4,28 +4,24 @@ build:
   commands:
     pre-build:
       - yarn run gen-config
-      # - yarn && yarn preprocess
-      # - node test.js
     build:
       - yarn && yarn preprocess
     post-build:
       # - yarn run gen-config
   env:
-    - name: MY_VAR_EXAMPLE
-      value: "example"
     - name: BUNDLER_ENV_NETWORK
       value: "https://goerli.infura.io/v3/343f11a325594d318750bff27664473a"
     - name: BUNDLER_ENV_ENTRYPOINT
-      value: "0x5C8b3e2232768d991Ea02ac8bEACaf824aEF0b7d"
+      value: "0x0f8425222890A6D2548e095102b4C0B9F4A08c82"
     - name: BUNDLER_ENV_BENEFICIARY
       value: "0x21f8c63F8aA848baBa3B5D4E19f879221E7a0275"
     - name: BUNDLER_ENV_MNEMONIC
       value: "test test test test test test test test test test test junk"
     - name: BUNDLER_ENV_PORT
-      value: APP_PORT
+      value: 3000
 run:
   runtime-version: 16.19.0
-  command: yarn run bundler --config ./localconfig/local.bundler.config.json
+  command: yarn run bundler --config ./localconfig/local.bundler.config.json --unsafe
   network:
     port: 3000
     env: APP_PORT
