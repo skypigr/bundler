@@ -20,7 +20,7 @@ echo $BUNDLER_ENV_MNEMONIC > ../localconfig/$_MNEMONIC_FILE_NAME
 
 # Constructs a config from env and writes it to a local file.
 # TODO(xiaozhu): we may want to add validation on key env variables.
-cat > ../localconfig/$_CONFIG_FILE_NAME <<- EOM
+cat > $_CONFIG_FILE_NAME <<- EOM
 {
     "gasFactor": "1",
     "port": "$_PORT",
@@ -36,3 +36,9 @@ cat > ../localconfig/$_CONFIG_FILE_NAME <<- EOM
     "autoBundleMempoolSize": 10
 }
 EOM
+
+if [ -f "$_CONFIG_FILE_NAME" ]; then
+    echo bundler config file: "$_CONFIG_FILE_NAME"
+else 
+    echo "$_CONFIG_FILE_NAME does not exist."
+fi
