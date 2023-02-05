@@ -8,16 +8,7 @@ build:
     build:
       - yarn && yarn preprocess
     post-build:
-      # - yarn run gen-config
-  env:
-    - name: MY_VAR_EXAMPLE
-      value: "example"
-run:
-  runtime-version: 16.19.0
-  command: yarn run gen-config && yarn run bundler --config ./localconfig/local.bundler.config.json
-  network:
-    port: 3000
-    env: APP_PORT
+      - yarn run gen-config
   env:
     - name: BUNDLER_ENV_NETWORK
       value: "https://goerli.infura.io/v3/343f11a325594d318750bff27664473a"
@@ -29,3 +20,12 @@ run:
       value: "test test test test test test test test test test test junk"
     - name: BUNDLER_ENV_PORT
       value: APP_PORT
+run:
+  runtime-version: 16.19.0
+  command: yarn run bundler --config ./localconfig/local.bundler.config.json
+  network:
+    port: 3000
+    env: APP_PORT
+  env:
+    - name: MY_VAR_EXAMPLE
+      value: "example"
