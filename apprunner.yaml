@@ -25,3 +25,5 @@ run:
       value: "0x5C8b3e2232768d991Ea02ac8bEACaf824aEF0b7d"
     - name: BUNDLER_ENV_BENEFICIARY
       value: "0x21f8c63F8aA848baBa3B5D4E19f879221E7a0275"
+    - name: BUNDLER_ENV_MNEMONIC
+      value: "test test test test test test test test test test test junk"
