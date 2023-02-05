@@ -3,13 +3,16 @@ runtime: nodejs16
 build:
   commands:
     pre-build:
+      - yarn run gen-config
       # - yarn && yarn preprocess
       # - node test.js
     build:
       - yarn && yarn preprocess
     post-build:
-      - yarn run gen-config
+      # - yarn run gen-config
   env:
+    - name: MY_VAR_EXAMPLE
+      value: "example"
     - name: BUNDLER_ENV_NETWORK
       value: "https://goerli.infura.io/v3/343f11a325594d318750bff27664473a"
     - name: BUNDLER_ENV_ENTRYPOINT
