@@ -1,12 +1,9 @@
-import ow from 'ow'
 import fs from 'fs'
 
 import { Command } from 'commander'
 import { erc4337RuntimeVersion } from '@account-abstraction/utils'
 import { ethers, Wallet } from 'ethers'
-import { BaseProvider } from '@ethersproject/providers'
 
-import { BundlerConfig, bundlerConfigDefault, BundlerConfigShape } from './BundlerConfig'
 import { BundlerServer } from './BundlerServer'
 import { UserOpMethodHandler } from './UserOpMethodHandler'
 import { EntryPoint, EntryPoint__factory } from '@account-abstraction/contracts'

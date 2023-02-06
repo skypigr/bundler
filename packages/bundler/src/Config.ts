@@ -24,7 +24,6 @@ export function isProd() {
 export async function getAwsSSMParameter(name: string, region: string = 'us-west-2'):
     Promise<string> {
     const config: SSM.Types.ClientConfiguration = { region: region }
-    
     const ssm = new SSM(config);
     const params: SSM.GetParameterRequest = {
         Name: name,
@@ -34,7 +33,6 @@ export async function getAwsSSMParameter(name: string, region: string = 'us-west
     const res = await ssm.getParameter(params).promise();
     return res.Parameter?.Value!;
 }
-
 
 export async function getAwsSSMParams(): Promise<Partial<BundlerConfig>> {
     const params: any = {}
