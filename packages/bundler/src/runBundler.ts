@@ -27,7 +27,7 @@ ethers.BigNumber.prototype[inspectCustomSymbol] = function () {
 const CONFIG_FILE_NAME = 'workdir/bundler.config.json'
 
 export function isProd() {
-  return process.env.ENV === 'PROD'
+  return process.env.STAGE === 'PROD'
 }
 
 export let showStackTraces = false
@@ -58,12 +58,14 @@ function getCommandLineParams(programOpts: any): Partial<BundlerConfig> {
   return params as BundlerConfig
 }
 
+
+
 async function getProdParams(): Promise<Partial<BundlerConfig>> {
   const params: any = {}
   if (isProd()) {
-    params['beneficiary'] = await getSSMParameter('dev_bundler_beneficiary')
-    params['entryPoint'] = await getSSMParameter('dev_bundler_entrypoint')
-    params['network'] = await getSSMParameter('dev_bundler_network_goerli')
+    params['beneficiary'] = await getSSMParameter(process.env.BUNDLER_PARAM_BENEFICIARY!)
+    params['entryPoint'] = await getSSMParameter(process.env.BUNDLER_PARAM_ENTRYPOINT!)
+    params['network'] = await getSSMParameter(process.env.BUNDLER_PARAM_NETWORK!)
     console.log('Received Prod Params:', params);
   }
   return params as BundlerConfig
@@ -116,7 +118,7 @@ export async function runBundler(argv: string[], overrideExit = true): Promise<B
   const programOpts = program.parse(argv).opts()
   showStackTraces = programOpts.showStackTraces
 
-  console.log(`Configuring bundler in ${process.env.ENV} mode`);
+  console.log(`Configuring bundler in ${process.env.STAGE} stage`);
   console.log('command-line arguments: ', program.opts())
 
   const config = await resolveConfiguration(programOpts)
@@ -139,7 +141,7 @@ export async function runBundler(argv: string[], overrideExit = true): Promise<B
   let wallet: Wallet
   try {
     mnemonic = isProd()
-      ? await getSSMParameter('dev_bundler_mnemonic')
+      ? await getSSMParameter(process.env.BUNDLER_PARAM_MNEMONIC_PHRASE!)
       : fs.readFileSync(config.mnemonic, 'ascii').trim()
     wallet = Wallet.fromMnemonic(mnemonic).connect(provider)
   } catch (e: any) {

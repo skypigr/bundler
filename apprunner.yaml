@@ -3,14 +3,10 @@ runtime: nodejs16
 build:
   commands:
     pre-build:
-      # - yarn run gen-config
     build:
       - yarn && yarn preprocess
     post-build:
-      # - yarn run gen-config
   env:
-    # - name: BUNDLER_ENV_PORT
-    #   value: 3000
 run:
   runtime-version: 16.19.0
   command: yarn run bundler --unsafe
@@ -18,5 +14,13 @@ run:
     port: 3000
     env: APP_PORT
   env:
-    - name: ENV
+    - name: STAGE
       value: "PROD"
+    - name: BUNDLER_PARAM_BENEFICIARY
+      value: "dev_bundler_beneficiary"
+    - name: BUNDLER_PARAM_ENTRYPOINT
+      value: "dev_bundler_entrypoint"
+    - name: BUNDLER_PARAM_MNEMONIC_PHRASE
+      value: "dev_bundler_mnemonic"
+    - name: BUNDLER_PARAM_NETWORK
+      value: "dev_bundler_network_goerli"
