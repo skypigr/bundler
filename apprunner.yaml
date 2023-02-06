@@ -3,27 +3,20 @@ runtime: nodejs16
 build:
   commands:
     pre-build:
-      - yarn run gen-config
+      # - yarn run gen-config
     build:
       - yarn && yarn preprocess
     post-build:
       # - yarn run gen-config
   env:
-    - name: BUNDLER_ENV_PORT
-      value: 3000
-  secrets:
-    - name: BUNDLER_ENV_MNEMONIC
-      value-from: "arn:aws:ssm:us-west-2:198308436524:parameter/dev_bundler_mnemonic"
-    - name: BUNDLER_ENV_NETWORK
-      value-from: "arn:aws:ssm:us-west-2:198308436524:parameter/dev_bundler_network_goerli"
-    - name: BUNDLER_ENV_BENEFICIARY
-      value-from: "arn:aws:ssm:us-west-2:198308436524:parameter/dev_bundler_beneficiary"
+    # - name: BUNDLER_ENV_PORT
+    #   value: 3000
 run:
   runtime-version: 16.19.0
-  command: yarn run bundler --config ./localconfig/local.bundler.config.json --unsafe
+  command: yarn run bundler --unsafe
   network:
     port: 3000
     env: APP_PORT
   env:
-    - name: MY_VAR_EXAMPLE
-      value: "example"
+    - name: ENV
+      value: "PROD"
