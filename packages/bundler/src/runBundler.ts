@@ -15,7 +15,7 @@ import { initServer } from './modules/initServer'
 import { DebugMethodHandler } from './DebugMethodHandler'
 import { DeterministicDeployer } from '@account-abstraction/sdk'
 import { isGeth } from './utils'
-import { getSSMParameter } from './aws'
+import { resolveConfiguration } from './Config'
 
 // this is done so that console.log outputs BigNumber as hex string instead of unreadable object
 export const inspectCustomSymbol = Symbol.for('nodejs.util.inspect.custom')
@@ -26,50 +26,7 @@ ethers.BigNumber.prototype[inspectCustomSymbol] = function () {
 
 const CONFIG_FILE_NAME = 'workdir/bundler.config.json'
 
-export function isProd() {
-  return process.env.STAGE === 'PROD'
-}
-
 export let showStackTraces = false
-
-export async function resolveConfiguration(programOpts: any): Promise<BundlerConfig> {
-  let fileConfig: Partial<BundlerConfig> = {}
-
-  const commandLineParams = getCommandLineParams(programOpts)
-  const configFileName = programOpts.config
-  if (fs.existsSync(configFileName)) {
-    fileConfig = JSON.parse(fs.readFileSync(configFileName, 'ascii'))
-  }
-  const prodOverwrites = await getProdParams()
-  const mergedConfig = Object.assign({}, bundlerConfigDefault, fileConfig, commandLineParams, prodOverwrites)
-  console.log('Merged configuration:', JSON.stringify(mergedConfig))
-  ow(mergedConfig, ow.object.exactShape(BundlerConfigShape))
-  return mergedConfig
-}
-
-function getCommandLineParams(programOpts: any): Partial<BundlerConfig> {
-  const params: any = {}
-  for (const bundlerConfigShapeKey in BundlerConfigShape) {
-    const optionValue = programOpts[bundlerConfigShapeKey]
-    if (optionValue != null) {
-      params[bundlerConfigShapeKey] = optionValue
-    }
-  }
-  return params as BundlerConfig
-}
-
-
-
-async function getProdParams(): Promise<Partial<BundlerConfig>> {
-  const params: any = {}
-  if (isProd()) {
-    params['beneficiary'] = await getSSMParameter(process.env.BUNDLER_PARAM_BENEFICIARY!)
-    params['entryPoint'] = await getSSMParameter(process.env.BUNDLER_PARAM_ENTRYPOINT!)
-    params['network'] = await getSSMParameter(process.env.BUNDLER_PARAM_NETWORK!)
-    console.log('Received Prod Params:', params);
-  }
-  return params as BundlerConfig
-}
 
 export async function connectContracts(
   wallet: Wallet,
@@ -121,7 +78,8 @@ export async function runBundler(argv: string[], overrideExit = true): Promise<B
   console.log(`Configuring bundler in ${process.env.STAGE} stage`);
   console.log('command-line arguments: ', program.opts())
 
-  const config = await resolveConfiguration(programOpts)
+  const [config, provider, wallet] = await resolveConfiguration(programOpts)
+
   if (programOpts.createMnemonic != null) {
     const mnemonicFile = config.mnemonic
     console.log('Creating mnemonic in file', mnemonicFile)
@@ -132,20 +90,6 @@ export async function runBundler(argv: string[], overrideExit = true): Promise<B
     fs.writeFileSync(mnemonicFile, newMnemonic)
     console.log('created mnemonic file', mnemonicFile)
     process.exit(1)
-  }
-  const provider: BaseProvider =
-    // eslint-disable-next-line
-    config.network === 'hardhat' ? require('hardhat').ethers.provider :
-      ethers.getDefaultProvider(config.network)
-  let mnemonic: string
-  let wallet: Wallet
-  try {
-    mnemonic = isProd()
-      ? await getSSMParameter(process.env.BUNDLER_PARAM_MNEMONIC_PHRASE!)
-      : fs.readFileSync(config.mnemonic, 'ascii').trim()
-    wallet = Wallet.fromMnemonic(mnemonic).connect(provider)
-  } catch (e: any) {
-    throw new Error(`Unable to read --mnemonic ${config.mnemonic}: ${e.message as string}`)
   }
 
   const {
