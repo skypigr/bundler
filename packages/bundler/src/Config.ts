@@ -26,7 +26,7 @@ export async function getAwsSSMParameter (name: string, region: string = 'us-wes
   const ssm = new SSM(config)
   const params: SSM.GetParameterRequest = {
     Name: name,
-    WithDecryption: false
+    WithDecryption: true
   }
 
   const resp = await ssm.getParameter(params).promise().catch(e => console.error(e))
@@ -48,7 +48,7 @@ export async function getParamFromEnv (envName: string): Promise<string> {
 export async function getAwsSSMParams (): Promise<Partial<BundlerConfig>> {
   const params: any = {}
   if (isProd()) {
-    console.log('Reading parameter from AWS SSM Paramter Store');
+    console.log('Reading parameter from AWS SSM Paramter Store')
 
     // TODO(skypigr): We can query multiple parameters in one batch.
     params.beneficiary = await getParamFromEnv('BUNDLER_PARAM_BENEFICIARY')
