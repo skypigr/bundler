@@ -28,8 +28,10 @@ export async function getAwsSSMParameter (name: string, region: string = 'us-wes
     Name: name,
     WithDecryption: false
   }
-  const { Parameter } = await ssm.getParameter(params).promise()
-  if (Parameter?.Value == null) {
+
+  const resp = await ssm.getParameter(params).promise().catch(e => console.error(e))
+  const Parameter = resp?.Parameter
+  if (Parameter == null || Parameter.Value == null) {
     throw new Error(`Error reading ${name} from AWS SSM Parameter Store`)
   }
   return Parameter.Value
@@ -46,6 +48,8 @@ export async function getParamFromEnv (envName: string): Promise<string> {
 export async function getAwsSSMParams (): Promise<Partial<BundlerConfig>> {
   const params: any = {}
   if (isProd()) {
+    console.log('Reading parameter from AWS SSM Paramter Store');
+
     // TODO(skypigr): We can query multiple parameters in one batch.
     params.beneficiary = await getParamFromEnv('BUNDLER_PARAM_BENEFICIARY')
     params.entryPoint = await getParamFromEnv('BUNDLER_PARAM_ENTRYPOINT')
@@ -63,7 +67,6 @@ function mergeConfigs (...sources: Array<Partial<BundlerConfig>>): BundlerConfig
 
 export async function resolveConfiguration (programOpts: any): Promise<{ config: BundlerConfig, provider: BaseProvider, wallet: Wallet }> {
   console.log(`Resolving bundler config in ${process.env.STAGE} stage`)
-
   const commandLineParams = getCommandLineParams(programOpts)
   let fileConfig: Partial<BundlerConfig> = {}
   const configFileName = programOpts.config
