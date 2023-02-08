@@ -17,10 +17,10 @@ run:
     - name: STAGE
       value: "PROD"
     - name: BUNDLER_PARAM_BENEFICIARY
-      value: "/bundler/goerli/dev/beneficiary"
+      value: "/bundler/arb/goerli/dev/beneficiary"
     - name: BUNDLER_PARAM_ENTRYPOINT
-      value: "/bundler/goerli/dev/entrypoint"
+      value: "/bundler/arb/goerli/dev/entrypoint"
     - name: BUNDLER_PARAM_MNEMONIC_PHRASE
-      value: "/bundler/goerli/dev/mnemonic"
+      value: "/bundler/arb/goerli/dev/mnemonic"
     - name: BUNDLER_PARAM_NETWORK
-      value: "/bundler/goerli/dev/network"
+      value: "/bundler/arb/goerli/dev/network"
