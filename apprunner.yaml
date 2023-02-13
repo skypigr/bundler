@@ -24,3 +24,5 @@ run:
       value: "/bundler/arb/goerli/dev/mnemonic"
     - name: BUNDLER_PARAM_NETWORK
       value: "/bundler/arb/goerli/dev/network"
+    - name: DEBUG
+      value: "aa.rpc"
