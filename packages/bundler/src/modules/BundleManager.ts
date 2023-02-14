@@ -234,9 +234,6 @@ export class BundleManager {
    * if signer's balance is too low, send it to signer. otherwise, send to configured beneficiary.
    */
   async _selectBeneficiary (): Promise<string> {
-    // TODO(xiaozhu): the following `signer.getAddress()` call will crash the binary, fix this.
-    return this.beneficiary
-    // eslint-disable-next-line
     const currentBalance = await this.provider.getBalance(this.signer.getAddress())
     let beneficiary = this.beneficiary
     // below min-balance redeem to the signer, to keep it active.
