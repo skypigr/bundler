@@ -21,8 +21,8 @@ run:
     - name: BUNDLER_PARAM_MNEMONIC_PHRASE
       value: "/bundler/dev/mnemonic"
     - name: BUNDLER_PARAM_ENTRYPOINT
-      value: "/bundler/eth/goerli/dev/entrypoint"
+      value: "/bundler/op/goerli/dev/entrypoint"
     - name: BUNDLER_PARAM_NETWORK
-      value: "/bundler/eth/goerli/dev/network"
+      value: "/bundler/op/goerli/dev/network"
     - name: DEBUG
       value: "aa.rpc"
