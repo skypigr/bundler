@@ -23,6 +23,6 @@ run:
     - name: BUNDLER_PARAM_MNEMONIC_PHRASE
       value: "/bundler/arb/main/v1/mnemonic"
     - name: BUNDLER_PARAM_NETWORK
-      value: "/bundler/arb/maiv/v1/network"
+      value: "/bundler/arb/main/v1/network"
     - name: DEBUG
       value: "aa.rpc"
