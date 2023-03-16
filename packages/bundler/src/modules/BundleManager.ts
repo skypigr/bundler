@@ -196,7 +196,7 @@ export class BundleManager {
         // Try to re-verify UserOp's profitability
         await this.validationManager.checkProfitability(entry.userOp)
       } catch (e: any) {
-        // Don't fail when it's profitable at this moment, wait until the network Gas fee goes down.
+        // Don't fail when it's not profitable at this moment, wait until the network Gas fee goes down.
         debug("userOp isn't profitable at this moment, leave it in the pool for now",
           entry.userOp.sender,
           entry.userOp.nonce)

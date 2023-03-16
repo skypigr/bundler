@@ -162,7 +162,7 @@ export class UserOpMethodHandler {
 
     // In this method, we use a `L1GasLimit` concept to compensate bundler
     // with the Gas this transaction would consume when going to L1, and
-    // add it to `preVerificationGas` such that User's of this method can
+    // add it to `preVerificationGas` such that the User of this method can
     // simiply use the returned `preVerificationGas` in their
     // UserOperation without further calculation.
     const L1GasLimit = await getExtraL1Gas(this.provider, userOp)
